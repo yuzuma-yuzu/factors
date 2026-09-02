@@ -43,7 +43,7 @@ header{padding:20px 24px;margin-bottom:16px}.screen{padding:24px}h1{margin:0;col
 
 <script>
 let score=0,stage=1,q=0,locked=false,timerId=null,timeLeft=0,currentData=null;
-const perStage=4,point=20,total=12,timeLimits=[40,30,10];
+const perStage=4,point=20,total=12,timeLimits=[20,20,10];
 const stages=["因數獵人","倍數跑酷","因數倍數大對決"];
 const $=x=>document.getElementById(x),rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const shuffle=a=>[...a].sort(()=>Math.random()-.5);
