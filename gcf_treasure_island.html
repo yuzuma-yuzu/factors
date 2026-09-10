@@ -1,0 +1,1825 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>因數倍數小冒險 3：公因數寶藏島</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    background: linear-gradient(135deg, #fff8e7, #eaf8ff);
+    color: #263238;
+}
+
+button {
+    font-family: inherit;
+}
+
+.game-container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* =========================
+   首頁
+========================= */
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+.start-card {
+    background: white;
+    border-radius: 28px;
+    padding: 35px;
+    margin-top: 25px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    text-align: center;
+}
+
+.logo {
+    font-size: 70px;
+    margin-bottom: 5px;
+}
+
+h1 {
+    color: #7b4bb7;
+    font-size: 34px;
+    margin: 8px 0;
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #607d8b;
+    margin-bottom: 25px;
+}
+
+.story-box {
+    background: linear-gradient(135deg, #fff3cd, #fff9e8);
+    border: 2px solid #f4d77b;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: left;
+    line-height: 1.8;
+    margin: 20px 0;
+}
+
+.story-box strong {
+    color: #a56800;
+}
+
+.concept-box {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 25px 0;
+}
+
+.concept {
+    background: #f4efff;
+    border-radius: 15px;
+    padding: 14px 20px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.start-btn {
+    border: none;
+    background: linear-gradient(135deg, #8e5ac8, #6d3da6);
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    padding: 16px 45px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 7px 15px rgba(109,61,166,0.3);
+    transition: 0.2s;
+}
+
+.start-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* =========================
+   遊戲上方資訊
+========================= */
+
+.top-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.info-box {
+    background: white;
+    border-radius: 15px;
+    padding: 12px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.info-title {
+    font-size: 13px;
+    color: #78909c;
+}
+
+.info-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #5e35b1;
+}
+
+.progress-container {
+    height: 12px;
+    background: #e0e0e0;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #8e5ac8, #ba78e8);
+    transition: width 0.3s;
+}
+
+/* =========================
+   關卡標題
+========================= */
+
+.stage-title {
+    background: linear-gradient(135deg, #7b4bb7, #9c6bd1);
+    color: white;
+    padding: 18px 22px;
+    border-radius: 20px;
+    margin-bottom: 18px;
+}
+
+.stage-title h2 {
+    margin: 0 0 5px;
+    font-size: 24px;
+}
+
+.stage-title p {
+    margin: 0;
+    opacity: 0.92;
+}
+
+/* =========================
+   計時器
+========================= */
+
+.timer-area {
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+.timer {
+    display: inline-block;
+    background: #263238;
+    color: white;
+    font-size: 27px;
+    font-weight: bold;
+    padding: 8px 28px;
+    border-radius: 50px;
+    min-width: 130px;
+}
+
+.timer.warning {
+    background: #f57c00;
+    animation: pulse 0.8s infinite;
+}
+
+.timer.danger {
+    background: #d32f2f;
+    animation: pulse 0.45s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* =========================
+   題目卡片
+========================= */
+
+.question-card {
+    background: white;
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.10);
+}
+
+.question-number {
+    color: #8e5ac8;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.question-text {
+    font-size: 25px;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   因數道路
+========================= */
+
+.factor-roads {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin: 20px 0;
+}
+
+.factor-road {
+    border: 3px solid #d8c8ee;
+    background: #faf7ff;
+    border-radius: 20px;
+    padding: 16px;
+}
+
+.road-title {
+    text-align: center;
+    font-weight: bold;
+    color: #7040a5;
+    margin-bottom: 12px;
+}
+
+.factor-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.factor-number {
+    background: white;
+    border: 2px solid #c8b5e3;
+    border-radius: 12px;
+    padding: 9px 13px;
+    font-weight: bold;
+}
+
+/* =========================
+   寶藏情境
+========================= */
+
+.treasure-scene {
+    background: linear-gradient(135deg, #fff8dc, #fff0b8);
+    border: 2px solid #efd27a;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 18px 0;
+    text-align: center;
+}
+
+.treasure-items {
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.treasure-item {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.treasure-icon {
+    display: block;
+    font-size: 45px;
+}
+
+/* =========================
+   選項
+========================= */
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 13px;
+    margin-top: 20px;
+}
+
+.option-btn {
+    border: 3px solid #ded5e9;
+    background: #fff;
+    border-radius: 17px;
+    padding: 16px;
+    font-size: 21px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.option-btn:hover {
+    background: #f7f1ff;
+    border-color: #9b70c9;
+    transform: translateY(-2px);
+}
+
+.option-btn.selected {
+    background: #eee3ff;
+    border-color: #7b4bb7;
+}
+
+.option-btn.correct {
+    background: #d9f5df;
+    border-color: #43a047;
+    color: #216b2a;
+}
+
+.option-btn.wrong {
+    background: #ffe0e0;
+    border-color: #e53935;
+    color: #a51e1e;
+}
+
+/* =========================
+   回饋
+========================= */
+
+.feedback {
+    display: none;
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 18px;
+    line-height: 1.7;
+}
+
+.feedback.show {
+    display: block;
+}
+
+.feedback.correct-feedback {
+    background: #e7f7ea;
+    border: 2px solid #66bb6a;
+}
+
+.feedback.wrong-feedback {
+    background: #fff0f0;
+    border: 2px solid #ef7773;
+}
+
+.feedback-title {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+.explanation {
+    margin-top: 8px;
+}
+
+/* =========================
+   按鈕
+========================= */
+
+.action-area {
+    text-align: center;
+    margin-top: 22px;
+}
+
+.action-btn {
+    border: none;
+    background: linear-gradient(135deg, #7b4bb7, #9c6bd1);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 14px 38px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgba(123,75,183,0.25);
+}
+
+.action-btn:disabled {
+    background: #bdbdbd;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* =========================
+   結果頁
+========================= */
+
+.result-card {
+    background: white;
+    border-radius: 28px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+    margin-top: 25px;
+}
+
+.final-score {
+    font-size: 52px;
+    font-weight: bold;
+    color: #7b4bb7;
+    margin: 15px 0;
+}
+
+.stars {
+    font-size: 55px;
+    letter-spacing: 8px;
+    margin: 15px 0;
+}
+
+.result-message {
+    font-size: 21px;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+/* =========================
+   RWD
+========================= */
+
+@media (max-width: 650px) {
+
+    .game-container {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    .logo {
+        font-size: 55px;
+    }
+
+    .top-bar {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+    }
+
+    .info-value {
+        font-size: 16px;
+    }
+
+    .factor-roads {
+        grid-template-columns: 1fr;
+    }
+
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+    .question-text {
+        font-size: 21px;
+    }
+
+    .start-card,
+    .result-card {
+        padding: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game-container">
+
+    <!-- =========================
+         首頁
+    ========================== -->
+
+    <section id="startScreen" class="screen active">
+
+        <div class="start-card">
+
+            <div class="logo">🏝️💎</div>
+
+            <h1>因數倍數小冒險 3</h1>
+
+            <div class="subtitle">
+                公因數寶藏島
+            </div>
+
+            <div class="story-box">
+
+                🏴‍☠️ <strong>寶藏島的任務：</strong><br>
+
+                島上有許多寶藏，但是寶藏必須
+                <strong>平均分組，而且不能有剩下的寶藏！</strong>
+
+                <br><br>
+
+                你已經學會「因數」了，
+                這一次要把兩個數字的因數放在一起比較。
+
+            </div>
+
+            <div class="concept-box">
+
+                <div class="concept">
+                    🔢 因數
+                </div>
+
+                <div class="concept">
+                    🤝 兩邊都有 → 公因數
+                </div>
+
+                <div class="concept">
+                    👑 最大的公因數 → 最大公因數
+                </div>
+
+            </div>
+
+            <div class="story-box">
+
+                <strong>冒險規則：</strong><br>
+                🌱 第一關：找出所有公因數<br>
+                🔍 第二關：寶藏平均分組<br>
+                👑 第三關：找出最大公因數<br><br>
+
+                每題答對 <strong>+20 分</strong>，總分最高 <strong>240 分</strong>！
+            </div>
+
+            <button class="start-btn" onclick="startGame()">
+                🗺️ 開始尋找寶藏！
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         遊戲畫面
+    ========================== -->
+
+    <section id="gameScreen" class="screen">
+
+        <div class="top-bar">
+
+            <div class="info-box">
+                <div class="info-title">目前關卡</div>
+                <div class="info-value" id="stageInfo">第一關</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">題目</div>
+                <div class="info-value">
+                    <span id="questionInfo">1</span> / 12
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">目前分數</div>
+                <div class="info-value">
+                    <span id="scoreInfo">0</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="stage-title">
+            <h2 id="stageTitle">🌱 第一關：因數探險隊</h2>
+            <p id="stageDescription">
+                找出兩個數字共同擁有的因數！
+            </p>
+        </div>
+
+        <div class="timer-area">
+            <div class="timer" id="timer">
+                ⏱️ 40
+            </div>
+        </div>
+
+        <div class="question-card">
+
+            <div class="question-number" id="questionNumber">
+                第 1 題
+            </div>
+
+            <div class="question-text" id="questionText">
+                題目
+            </div>
+
+            <div id="questionContent"></div>
+
+            <div class="feedback" id="feedback">
+
+                <div class="feedback-title" id="feedbackTitle"></div>
+
+                <div id="feedbackText"></div>
+
+                <div class="explanation" id="explanation"></div>
+
+            </div>
+
+            <div class="action-area">
+
+                <button
+                    id="actionButton"
+                    class="action-btn"
+                    onclick="checkAnswer()">
+                    檢查答案 →
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         結果畫面
+    ========================== -->
+
+    <section id="resultScreen" class="screen">
+
+        <div class="result-card">
+
+            <div style="font-size:65px;">🏆</div>
+
+            <h1>寶藏島冒險完成！</h1>
+
+            <div class="final-score">
+                <span id="finalScore">0</span> / 240
+            </div>
+
+            <div class="stars" id="stars">
+                ⭐⭐⭐
+            </div>
+
+            <div class="result-message" id="resultMessage">
+                太棒了！
+            </div>
+
+            <button class="start-btn" onclick="restartGame()">
+                🔄 再挑戰一次
+            </button>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   題庫
+========================================================= */
+
+/*
+   第一關：
+   找出兩個數字的所有公因數
+   每題至少 2 個正確答案
+*/
+
+const stage1Questions = [
+
+    {
+        a: 12,
+        b: 18,
+        common: [1, 2, 3, 6],
+        factorsA: [1, 2, 3, 4, 6, 12],
+        factorsB: [1, 2, 3, 6, 9, 18]
+    },
+
+    {
+        a: 16,
+        b: 24,
+        common: [1, 2, 4, 8],
+        factorsA: [1, 2, 4, 8, 16],
+        factorsB: [1, 2, 3, 4, 6, 8, 12, 24]
+    },
+
+    {
+        a: 18,
+        b: 30,
+        common: [1, 2, 3, 6],
+        factorsA: [1, 2, 3, 6, 9, 18],
+        factorsB: [1, 2, 3, 5, 6, 10, 15, 30]
+    },
+
+    {
+        a: 20,
+        b: 28,
+        common: [1, 2, 4],
+        factorsA: [1, 2, 4, 5, 10, 20],
+        factorsB: [1, 2, 4, 7, 14, 28]
+    }
+
+];
+
+
+/*
+   第二關：
+   平均分組情境
+   問「哪些分組方式可以同時把兩種寶藏分完？」
+*/
+
+const stage2Questions = [
+
+    {
+        a: 24,
+        b: 36,
+        common: [1, 2, 3, 4, 6, 12],
+        options: [1, 2, 3, 4, 5, 6, 8, 10, 12, 15],
+        text:
+        "島上有 24 枚金幣和 36 顆寶石。哪些「分組數」可以讓兩種寶藏都平均分完，而且完全沒有剩下的寶藏？"
+    },
+
+    {
+        a: 30,
+        b: 45,
+        common: [1, 3, 5, 15],
+        options: [1, 2, 3, 4, 5, 6, 9, 10, 15],
+        text:
+        "有 30 枚金幣和 45 顆寶石。哪些「分組數」可以讓金幣和寶石都平均分完？"
+    },
+
+    {
+        a: 32,
+        b: 48,
+        common: [1, 2, 4, 8, 16],
+        options: [1, 2, 3, 4, 6, 8, 12, 16, 24],
+        text:
+        "探險隊找到 32 枚金幣和 48 顆寶石。哪些「分組數」可以讓兩種寶藏都沒有剩下？"
+    },
+
+    {
+        a: 36,
+        b: 54,
+        common: [1, 2, 3, 6, 9, 18],
+        options: [1, 2, 3, 4, 5, 6, 9, 12, 18],
+        text:
+        "有 36 枚金幣和 54 顆寶石。哪些「分組數」能讓兩種寶藏都平均分完？"
+    }
+
+];
+
+
+/*
+   第三關：
+   最大公因數
+*/
+
+const stage3Questions = [
+
+    {
+        a: 24,
+        b: 36,
+        answer: 12,
+        options: [6, 8, 12, 18]
+    },
+
+    {
+        a: 30,
+        b: 45,
+        answer: 15,
+        options: [5, 10, 15, 20]
+    },
+
+    {
+        a: 32,
+        b: 48,
+        answer: 16,
+        options: [8, 12, 16, 24]
+    },
+
+    {
+        a: 36,
+        b: 54,
+        answer: 18,
+        options: [9, 12, 18, 27]
+    }
+
+];
+
+
+/* =========================================================
+   遊戲狀態
+========================================================= */
+
+let stage = 1;
+let stageQuestionIndex = 0;
+let totalQuestionIndex = 0;
+let score = 0;
+
+let currentQuestions = [];
+let selectedAnswers = [];
+
+let timer = 40;
+let timerInterval = null;
+let answering = true;
+
+
+/* =========================================================
+   開始遊戲
+========================================================= */
+
+function startGame() {
+
+    stage = 1;
+    stageQuestionIndex = 0;
+    totalQuestionIndex = 0;
+    score = 0;
+
+    /*
+       每一關開始時重新洗牌
+    */
+
+    currentQuestions = shuffleArray([...stage1Questions]);
+
+    document.getElementById("startScreen").classList.remove("active");
+    document.getElementById("resultScreen").classList.remove("active");
+    document.getElementById("gameScreen").classList.add("active");
+
+    loadQuestion();
+}
+
+
+/* =========================================================
+   重新開始
+========================================================= */
+
+function restartGame() {
+
+    document.getElementById("resultScreen").classList.remove("active");
+    document.getElementById("gameScreen").classList.remove("active");
+    document.getElementById("startScreen").classList.add("active");
+
+}
+
+
+/* =========================================================
+   洗牌
+========================================================= */
+
+function shuffleArray(array) {
+
+    for (let i = array.length - 1; i > 0; i--) {
+
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [array[i], array[j]] = [array[j], array[i]];
+
+    }
+
+    return array;
+}
+
+
+/* =========================================================
+   載入題目
+========================================================= */
+
+function loadQuestion() {
+
+    clearInterval(timerInterval);
+
+    answering = true;
+    selectedAnswers = [];
+
+    const question = currentQuestions[stageQuestionIndex];
+
+    updateStageUI();
+
+    document.getElementById("questionInfo").textContent =
+        totalQuestionIndex + 1;
+
+    document.getElementById("questionNumber").textContent =
+        `第 ${stageQuestionIndex + 1} 題`;
+
+    document.getElementById("scoreInfo").textContent = score;
+
+    const progress =
+        (totalQuestionIndex / 12) * 100;
+
+    document.getElementById("progressBar").style.width =
+        progress + "%";
+
+    document.getElementById("feedback").className = "feedback";
+
+    document.getElementById("actionButton").disabled = false;
+
+    document.getElementById("actionButton").textContent =
+        "檢查答案 →";
+
+    document.getElementById("questionContent").innerHTML = "";
+
+    /* 第一關 */
+    if (stage === 1) {
+
+        document.getElementById("questionText").textContent =
+            `請找出 ${question.a} 和 ${question.b} 的「所有公因數」。`;
+
+        renderStage1(question);
+
+    }
+
+    /* 第二關 */
+    else if (stage === 2) {
+
+        document.getElementById("questionText").textContent =
+            question.text;
+
+        renderStage2(question);
+
+    }
+
+    /* 第三關 */
+    else {
+
+        document.getElementById("questionText").textContent =
+            `${question.a} 和 ${question.b} 的最大公因數是多少？`;
+
+        renderStage3(question);
+
+    }
+
+    startTimer();
+}
+
+
+/* =========================================================
+   更新關卡資訊
+========================================================= */
+
+function updateStageUI() {
+
+    const stageTitle = document.getElementById("stageTitle");
+    const stageDescription =
+        document.getElementById("stageDescription");
+
+    const stageInfo =
+        document.getElementById("stageInfo");
+
+    if (stage === 1) {
+
+        stageTitle.textContent =
+            "🌱 第一關：因數探險隊";
+
+        stageDescription.textContent =
+            "找出兩個數字共同擁有的所有因數！";
+
+        stageInfo.textContent = "第一關";
+
+    }
+
+    else if (stage === 2) {
+
+        stageTitle.textContent =
+            "🔍 第二關：寶藏分組";
+
+        stageDescription.textContent =
+            "想一想：哪些分組方式可以平均分完？";
+
+        stageInfo.textContent = "第二關";
+
+    }
+
+    else {
+
+        stageTitle.textContent =
+            "👑 第三關：最大公因數王冠";
+
+        stageDescription.textContent =
+            "找出最大的共同因數，戴上王冠！";
+
+        stageInfo.textContent = "第三關";
+
+    }
+
+}
+
+
+/* =========================================================
+   第一關
+========================================================= */
+
+function renderStage1(question) {
+
+    const container =
+        document.getElementById("questionContent");
+
+    const roadHTML = `
+
+        <div class="factor-roads">
+
+            <div class="factor-road">
+
+                <div class="road-title">
+                    🧭 ${question.a} 的因數道路
+                </div>
+
+                <div class="factor-list">
+
+                    ${question.factorsA.map(n => `
+                        <div class="factor-number">
+                            ${n}
+                        </div>
+                    `).join("")}
+
+                </div>
+
+            </div>
+
+
+            <div class="factor-road">
+
+                <div class="road-title">
+                    🧭 ${question.b} 的因數道路
+                </div>
+
+                <div class="factor-list">
+
+                    ${question.factorsB.map(n => `
+                        <div class="factor-number">
+                            ${n}
+                        </div>
+                    `).join("")}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div style="
+            text-align:center;
+            font-size:18px;
+            margin:10px 0 5px;
+            font-weight:bold;
+        ">
+            💡 從兩條道路中找出「兩邊都有」的數字：
+        </div>
+
+        <div class="options" id="options">
+
+            ${createMultiOptions(
+                getUniqueSorted([
+                    ...question.factorsA,
+                    ...question.factorsB
+                ])
+            )}
+
+        </div>
+    `;
+
+    container.innerHTML = roadHTML;
+
+}
+
+
+/* =========================================================
+   第二關
+========================================================= */
+
+function renderStage2(question) {
+
+    const container =
+        document.getElementById("questionContent");
+
+    container.innerHTML = `
+
+        <div class="treasure-scene">
+
+            <div style="font-size:48px;">
+                🪙 💎
+            </div>
+
+            <div class="treasure-items">
+
+                <div class="treasure-item">
+
+                    <span class="treasure-icon">🪙</span>
+
+                    ${question.a} 枚金幣
+
+                </div>
+
+                <div class="treasure-item">
+
+                    <span class="treasure-icon">💎</span>
+
+                    ${question.b} 顆寶石
+
+                </div>
+
+            </div>
+
+            <div style="
+                margin-top:15px;
+                font-weight:bold;
+                color:#8a6200;
+            ">
+                要平均分組，而且不能剩下任何寶藏！
+            </div>
+
+        </div>
+
+        <div style="
+            text-align:center;
+            font-size:18px;
+            font-weight:bold;
+        ">
+            🔍 請選出所有可以的「分組數」
+        </div>
+
+        <div class="options" id="options">
+
+            ${createMultiOptions(question.options)}
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   第三關
+========================================================= */
+
+function renderStage3(question) {
+
+    const container =
+        document.getElementById("questionContent");
+
+    container.innerHTML = `
+
+        <div class="treasure-scene">
+
+            <div style="font-size:50px;">
+                👑 🪙 💎
+            </div>
+
+            <div style="
+                font-size:20px;
+                font-weight:bold;
+                margin-top:8px;
+            ">
+                ${question.a} 和 ${question.b}
+                可以最多分成幾組？
+            </div>
+
+            <div style="
+                margin-top:8px;
+                color:#7b5a00;
+            ">
+                提示：最大的分組數，就是「最大公因數」。
+            </div>
+
+        </div>
+
+        <div class="options" id="options">
+
+            ${question.options.map(n => `
+
+                <button
+                    class="option-btn"
+                    data-value="${n}"
+                    onclick="selectSingle(this)"
+                >
+                    ${n} 組
+                </button>
+
+            `).join("")}
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   建立多選選項
+========================================================= */
+
+function createMultiOptions(numbers) {
+
+    const shuffled =
+        shuffleArray([...numbers]);
+
+    return shuffled.map(n => `
+
+        <button
+            class="option-btn"
+            data-value="${n}"
+            onclick="toggleMulti(this)"
+        >
+            ${n}
+        </button>
+
+    `).join("");
+}
+
+
+/* =========================================================
+   多選
+========================================================= */
+
+function toggleMulti(button) {
+
+    if (!answering) return;
+
+    const value =
+        Number(button.dataset.value);
+
+    if (selectedAnswers.includes(value)) {
+
+        selectedAnswers =
+            selectedAnswers.filter(v => v !== value);
+
+        button.classList.remove("selected");
+
+    } else {
+
+        selectedAnswers.push(value);
+
+        button.classList.add("selected");
+
+    }
+
+}
+
+
+/* =========================================================
+   單選
+========================================================= */
+
+function selectSingle(button) {
+
+    if (!answering) return;
+
+    document
+        .querySelectorAll(".option-btn")
+        .forEach(btn => {
+            btn.classList.remove("selected");
+        });
+
+    button.classList.add("selected");
+
+    selectedAnswers = [
+        Number(button.dataset.value)
+    ];
+
+}
+
+
+/* =========================================================
+   檢查答案
+========================================================= */
+
+function checkAnswer() {
+
+    if (!answering) {
+
+        nextQuestion();
+
+        return;
+
+    }
+
+    answering = false;
+
+    clearInterval(timerInterval);
+
+    const question = currentQuestions[stageQuestionIndex];
+
+    let correct = false;
+    let correctAnswers = [];
+
+    if (stage === 1) {
+
+        correctAnswers = [...question.common];
+
+        correct =
+            arraysEqual(
+                selectedAnswers,
+                correctAnswers
+            );
+
+    }
+
+    else if (stage === 2) {
+
+        correctAnswers = [...question.common];
+
+        correct =
+            arraysEqual(
+                selectedAnswers,
+                correctAnswers
+            );
+
+    }
+
+    else {
+
+        correctAnswers = [question.answer];
+
+        correct =
+            selectedAnswers.length === 1 &&
+            selectedAnswers[0] === question.answer;
+
+    }
+
+
+    if (correct) {
+
+        score += 20;
+
+    }
+
+    showFeedback(
+        correct,
+        correctAnswers,
+        question
+    );
+
+}
+
+
+/* =========================================================
+   時間到
+========================================================= */
+
+function timeUp() {
+
+    if (!answering) return;
+
+    answering = false;
+
+    clearInterval(timerInterval);
+
+    const question = currentQuestions[stageQuestionIndex];
+
+    let correctAnswers = [];
+
+    if (stage === 1 || stage === 2) {
+
+        correctAnswers = [...question.common];
+
+    } else {
+
+        correctAnswers = [question.answer];
+
+    }
+
+    showFeedback(
+        false,
+        correctAnswers,
+        question,
+        true
+    );
+
+}
+
+
+/* =========================================================
+   顯示回饋
+========================================================= */
+
+function showFeedback(
+    isCorrect,
+    correctAnswers,
+    question,
+    isTimeUp = false
+) {
+
+    const feedback =
+        document.getElementById("feedback");
+
+    const feedbackTitle =
+        document.getElementById("feedbackTitle");
+
+    const feedbackText =
+        document.getElementById("feedbackText");
+
+    const explanation =
+        document.getElementById("explanation");
+
+
+    /*
+       標示答案
+    */
+
+    document
+        .querySelectorAll(".option-btn")
+        .forEach(button => {
+
+            const value =
+                Number(button.dataset.value);
+
+            const isCorrectOption =
+                correctAnswers.includes(value);
+
+            const wasSelected =
+                selectedAnswers.includes(value);
+
+            button.classList.remove(
+                "selected"
+            );
+
+            if (isCorrectOption) {
+
+                button.classList.add("correct");
+
+            }
+
+            else if (wasSelected) {
+
+                button.classList.add("wrong");
+
+            }
+
+        });
+
+
+    /*
+       回饋文字
+    */
+
+    if (isTimeUp) {
+
+        feedback.className =
+            "feedback show wrong-feedback";
+
+        feedbackTitle.textContent =
+            "⏰ 時間到囉！";
+
+        feedbackText.innerHTML =
+            `這題沒有得到分數。正確答案是：
+            <strong>${correctAnswers.join("、")}</strong>。`;
+
+    }
+
+    else if (isCorrect) {
+
+        feedback.className =
+            "feedback show correct-feedback";
+
+        feedbackTitle.textContent =
+            "🎉 答對了！+20 分";
+
+        feedbackText.innerHTML =
+            "太棒了！你成功找到了寶藏的共同秘密。";
+
+    }
+
+    else {
+
+        feedback.className =
+            "feedback show wrong-feedback";
+
+        feedbackTitle.textContent =
+            "💡 再想一想！";
+
+        feedbackText.innerHTML =
+            `這題沒有得到分數。正確答案是：
+            <strong>${correctAnswers.join("、")}</strong>。`;
+
+    }
+
+
+    /*
+       解析
+    */
+
+    explanation.innerHTML =
+        createExplanation(
+            question,
+            correctAnswers
+        );
+
+
+    document.getElementById("scoreInfo").textContent =
+        score;
+
+    document.getElementById("actionButton").textContent =
+        "下一題 →";
+
+}
+
+
+/* =========================================================
+   解析文字
+========================================================= */
+
+function createExplanation(
+    question,
+    correctAnswers
+) {
+
+    if (stage === 1) {
+
+        return `
+            <strong>📚 為什麼？</strong><br>
+            ${question.a} 的因數中有
+            ${question.factorsA.join("、")}。<br>
+            ${question.b} 的因數中有
+            ${question.factorsB.join("、")}。<br><br>
+
+            兩邊都有的數字就是「公因數」，
+            所以公因數是
+            <strong>${correctAnswers.join("、")}</strong>。
+        `;
+
+    }
+
+    if (stage === 2) {
+
+        return `
+            <strong>📚 為什麼？</strong><br>
+            可以平均分組，代表
+            ${question.a} 和 ${question.b}
+            都可以被這個數字整除，而且沒有餘數。<br><br>
+
+            所以能同時分完的分組數就是：
+            <strong>${correctAnswers.join("、")}</strong>。<br><br>
+
+            💡 能同時整除兩個數字的數，
+            就是它們的「公因數」。
+        `;
+
+    }
+
+    return `
+        <strong>📚 為什麼？</strong><br>
+        ${question.a} 和 ${question.b}
+        的公因數中，最大的數字是
+        <strong>${question.answer}</strong>。<br><br>
+
+        👑 因此，
+        <strong>${question.answer}</strong>
+        就是 ${question.a} 和 ${question.b}
+        的「最大公因數」。
+    `;
+
+}
+
+
+/* =========================================================
+   下一題
+========================================================= */
+
+function nextQuestion() {
+
+    stageQuestionIndex++;
+    totalQuestionIndex++;
+
+    /*
+       一個關卡完成
+    */
+
+    if (stageQuestionIndex >= 4) {
+
+        /*
+           還有下一關
+        */
+
+        if (stage < 3) {
+
+            stage++;
+
+            stageQuestionIndex = 0;
+
+            if (stage === 2) {
+
+                currentQuestions =
+                    shuffleArray([...stage2Questions]);
+
+            }
+
+            else if (stage === 3) {
+
+                currentQuestions =
+                    shuffleArray([...stage3Questions]);
+
+            }
+
+            loadQuestion();
+
+        }
+
+        else {
+
+            showResult();
+
+        }
+
+        return;
+
+    }
+
+    loadQuestion();
+
+}
+
+
+/* =========================================================
+   計時器
+========================================================= */
+
+function startTimer() {
+
+    if (stage === 1) {
+
+        timer = 40;
+
+    } else {
+
+        timer = 30;
+
+    }
+
+    updateTimerDisplay();
+
+    timerInterval =
+        setInterval(() => {
+
+            timer--;
+
+            updateTimerDisplay();
+
+            if (timer <= 0) {
+
+                clearInterval(timerInterval);
+
+                timeUp();
+
+            }
+
+        }, 1000);
+
+}
+
+
+/* =========================================================
+   計時器顯示
+========================================================= */
+
+function updateTimerDisplay() {
+
+    const timerElement =
+        document.getElementById("timer");
+
+    timerElement.textContent =
+        `⏱️ ${timer}`;
+
+    timerElement.classList.remove(
+        "warning",
+        "danger"
+    );
+
+    if (timer <= 5) {
+
+        timerElement.classList.add("danger");
+
+    }
+
+    else if (timer <= 10) {
+
+        timerElement.classList.add("warning");
+
+    }
+
+}
+
+
+/* =========================================================
+   顯示結果
+========================================================= */
+
+function showResult() {
+
+    clearInterval(timerInterval);
+
+    document
+        .getElementById("gameScreen")
+        .classList.remove("active");
+
+    document
+        .getElementById("resultScreen")
+        .classList.add("active");
+
+    document.getElementById("finalScore").textContent =
+        score;
+
+
+    let stars = "";
+    let message = "";
+
+    if (score >= 220) {
+
+        stars = "⭐⭐⭐⭐⭐";
+
+        message =
+            "太厲害了！你已經成為公因數寶藏島的大師！👑🏝️";
+
+    }
+
+    else if (score >= 180) {
+
+        stars = "⭐⭐⭐⭐";
+
+        message =
+            "非常棒！你已經很會找公因數了，再挑戰一次看看能不能拿滿分！";
+
+    }
+
+    else if (score >= 140) {
+
+        stars = "⭐⭐⭐";
+
+        message =
+            "做得很好！你已經掌握公因數的概念，再多練習幾次會更熟練！";
+
+    }
+
+    else if (score >= 80) {
+
+        stars = "⭐⭐";
+
+        message =
+            "不錯喔！記住：兩邊都有的是公因數，最大的就是最大公因數。";
+
+    }
+
+    else {
+
+        stars = "⭐";
+
+        message =
+            "沒關係！再探索一次寶藏島，把「因數 → 公因數 → 最大公因數」串起來吧！";
+
+    }
+
+    document.getElementById("stars").textContent =
+        stars;
+
+    document.getElementById("resultMessage").textContent =
+        message;
+
+}
+
+
+/* =========================================================
+   判斷陣列是否相同
+========================================================= */
+
+function arraysEqual(a, b) {
+
+    const aa = [...a].sort((x, y) => x - y);
+    const bb = [...b].sort((x, y) => x - y);
+
+    if (aa.length !== bb.length) {
+        return false;
+    }
+
+    return aa.every(
+        (value, index) => value === bb[index]
+    );
+
+}
+
+
+/* =========================================================
+   去除重複並排序
+========================================================= */
+
+function getUniqueSorted(array) {
+
+    return [...new Set(array)]
+        .sort((a, b) => a - b);
+
+}
+
+</script>
+
+</body>
+</html>
