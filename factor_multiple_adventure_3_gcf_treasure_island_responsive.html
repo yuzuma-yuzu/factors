@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>因數倍數小冒險 3：公因數寶藏島</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#3b3154;background:linear-gradient(#79d9f1,#b9f0d7,#75cdd2);min-height:100vh}button{font:inherit}.screen{display:none;min-height:100vh}.active{display:block}
+.start{padding:14px}.wrap{max-width:1180px;margin:auto}.hero{display:grid;grid-template-columns:1fr 1.45fr;gap:12px;align-items:center}
+.logo,.welcome,.life,.card,.result{background:#fffdf4;border:4px solid white;border-radius:26px;box-shadow:0 7px 0 #b79262;padding:16px}
+.logo{background:linear-gradient(145deg,#7441bf,#9a67e9);color:white;text-align:center;text-shadow:2px 3px #4d2b87}.logo h1{font-size:clamp(36px,5vw,58px);line-height:1;margin:5px}.logo b{display:inline-block;background:#ffd66b;color:#5a3a20;border-radius:20px;padding:7px 13px;text-shadow:none}
+.welcome h2{margin:0;color:#6040a8;font-size:clamp(24px,3vw,35px)}.welcome p{font-size:17px;font-weight:700;line-height:1.5;margin:7px 0}
+.life{margin-top:12px}.life-title{text-align:center;color:white;background:#945f35;border-radius:30px;font-size:clamp(25px,3vw,36px);font-weight:1000;padding:7px;margin:0 auto 12px;max-width:420px}
+.examples{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.example{border:3px solid #ddd;border-radius:19px;padding:10px;min-height:205px;text-align:center;background:white;display:flex;flex-direction:column}.example:nth-child(1){border-color:#f2b34b;background:#fffaf0}.example:nth-child(2){border-color:#8bcf7b;background:#f5fff1}.example:nth-child(3){border-color:#b993ed;background:#faf6ff}.example:nth-child(4){border-color:#78bce9;background:#f3fbff}.icon{font-size:40px}.example h3{margin:2px;font-size:20px}.example p{font-size:14px;line-height:1.5;font-weight:700;margin:4px}.use{margin-top:auto;padding:6px;border-radius:12px;background:#eee2ff;font-size:13px;font-weight:900}.example:nth-child(1) .use{background:#fff0cf}.example:nth-child(2) .use{background:#e2f6d9}.example:nth-child(4) .use{background:#dff2ff}
+.summary{display:flex;justify-content:center;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0;padding:9px;border:3px dashed #e2ad3e;border-radius:18px;font-weight:900}.pill{background:#eadcff;color:#633daf;border-radius:20px;padding:6px 13px}.big{background:#ffd45c;color:#6a4312;font-size:19px}
+.startbtn,.next,.restart{display:block;margin:10px auto 2px;border:0;border-radius:40px;background:linear-gradient(#a66cf0,#7040c7);color:#fff;font-size:24px;font-weight:1000;padding:12px 40px;box-shadow:0 5px 0 #4e2b91;cursor:pointer}.startbtn:active,.next:active,.restart:active{transform:translateY(4px);box-shadow:0 1px 0 #4e2b91}
+.game{padding:9px}.top{max-width:1050px;margin:auto;background:#fffdf4;border:3px solid white;border-radius:18px;padding:7px 11px;display:flex;gap:10px;align-items:center;box-shadow:0 4px 0 #bd9b63}.brand{font-weight:1000;color:#633daf;white-space:nowrap}.stat{font-weight:900;white-space:nowrap}.bar{height:11px;background:#ded7e9;border-radius:20px;overflow:hidden;flex:1}.fill{height:100%;width:0;background:linear-gradient(90deg,#8e5ee0,#f2bd36);transition:.2s}
+.gwrap{max-width:1050px;margin:8px auto}.head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}.stage{background:white;border-radius:17px;padding:8px 13px;font-size:21px;font-weight:1000;box-shadow:0 4px 0 #a885b7}.timer{background:white;border:3px solid #7047c8;color:#7047c8;border-radius:17px;padding:6px 14px;font-size:22px;font-weight:1000;box-shadow:0 4px 0 #4e2b91;min-width:95px;text-align:center}.warn{border-color:#e65c5c;color:#e65c5c}
+.card{padding:15px}.instruction{text-align:center;color:#715a83;font-weight:900}.question{text-align:center;font-size:clamp(22px,3vw,33px);font-weight:1000;line-height:1.35;margin:8px auto 12px}.roads{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.road{background:#f8edff;border:3px solid #c29aed;border-radius:17px;padding:9px}.road h3{text-align:center;margin:0 0 6px;color:#6941aa}.factors{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}.factor{background:white;border:2px solid #d7c2ed;border-radius:9px;padding:5px 9px;font-weight:900}
+.treasure{display:flex;justify-content:center;align-items:center;gap:9px;background:#fff4cf;border:3px dashed #e4af38;border-radius:17px;padding:9px;margin-bottom:10px;font-size:18px;font-weight:900}.treasure span{font-size:32px}
+.options{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;max-width:850px;margin:8px auto 10px}.option{border:3px solid #d8cbe8;background:white;border-radius:14px;padding:9px 4px;font-size:21px;font-weight:1000;min-height:48px;cursor:pointer;color:#4a3c5c}.selected{border-color:#7047c8!important;background:#eadcff!important;color:#5e369e!important}.correct{border-color:#35a96b!important;background:#ddf6e8!important;color:#217344!important}.wrong{border-color:#e65c5c!important;background:#ffe2e2!important;color:#a73434!important}
+.check{display:block;margin:8px auto 10px;border:0;border-radius:40px;background:linear-gradient(#a66cf0,#7040c7);color:#fff;font-size:21px;font-weight:1000;padding:10px 30px;box-shadow:0 4px 0 #4e2b91;cursor:pointer}.check:active{transform:translateY(3px);box-shadow:0 1px 0 #4e2b91}.check:disabled{opacity:.6;cursor:default}.feedback{display:none;border-radius:15px;padding:10px;text-align:center;font-weight:900;line-height:1.5}.show{display:block}.good{background:#ddf6e8;border:3px solid #55bd83;color:#237047}.bad{background:#ffe4e4;border:3px solid #e87979;color:#9d3535}.explain{background:#f5efff;border:2px solid #d2b9f2;border-radius:12px;padding:8px;margin-top:7px;font-size:15px}.next{display:none}.showbtn{display:block}
+.result{max-width:650px;margin:10vh auto;text-align:center;padding:30px}.result h1{font-size:42px;color:#633daf}.stars{font-size:50px}.final{font-size:31px;font-weight:1000;color:#7047c8}.result p{font-size:18px;font-weight:800;line-height:1.6}
+@media(min-width:700px) and (orientation:landscape){.start{padding:8px}.hero{gap:8px}.logo,.welcome,.life{padding:10px}.logo h1{font-size:39px}.welcome h2{font-size:23px}.welcome p{font-size:13px;margin:4px}.life{margin-top:8px}.life-title{font-size:25px;padding:5px;margin-bottom:7px}.examples{gap:7px}.example{min-height:145px;padding:7px}.icon{font-size:28px}.example h3{font-size:17px}.example p{font-size:11px;line-height:1.35}.use{font-size:10px;padding:4px}.summary{margin:7px;padding:6px;font-size:13px}.pill{padding:4px 9px}.big{font-size:14px}.startbtn{font-size:21px;padding:8px 32px;margin-top:5px}.card{padding:11px}}
+@media(max-width:699px){.start{padding:8px}.hero{grid-template-columns:1fr;gap:7px}.logo{padding:11px}.logo h1{font-size:37px}.welcome{padding:11px}.welcome h2{font-size:21px}.welcome p{font-size:13px;margin:4px}.life{padding:9px;margin-top:7px}.life-title{font-size:22px;padding:6px}.examples{grid-template-columns:1fr 1fr;gap:6px}.example{min-height:172px;padding:7px;border-width:2px}.icon{font-size:31px}.example h3{font-size:16px}.example p{font-size:11px;line-height:1.4}.use{font-size:10px;padding:4px}.summary{font-size:12px;gap:4px;margin:8px 0}.pill{padding:4px 7px}.big{font-size:13px}.startbtn{width:92%;font-size:21px;padding:10px}.top{flex-wrap:wrap}.bar{flex-basis:100%;order:3}.brand,.stat{font-size:13px}.head{align-items:stretch}.stage{font-size:16px;padding:7px 9px}.timer{font-size:18px;min-width:78px;padding:6px 8px}.card{padding:10px}.instruction{font-size:12px}.question{font-size:20px}.roads{grid-template-columns:1fr;gap:6px}.road{padding:7px}.road h3{font-size:16px}.factor{font-size:13px;padding:4px 7px}.treasure{font-size:14px;padding:7px}.treasure span{font-size:26px}.options{grid-template-columns:repeat(3,1fr);gap:5px}.option{font-size:18px;min-height:46px;padding:6px 2px}.feedback{font-size:13px}.explain{font-size:12px}.check{font-size:18px;padding:9px 24px}.next{font-size:19px;padding:9px 25px}}
+@media(max-width:390px){.logo h1{font-size:32px}.example{min-height:180px}.example p{font-size:10px}.question{font-size:18px}.option{font-size:16px}}
+</style>
+</head>
+<body>
+<section id="start" class="screen active"><div class="start"><div class="wrap">
+<div class="hero">
+<div class="logo"><div>🏝️ 因數倍數小冒險 3</div><h1>公因數<br>寶藏島</h1><b>用數學解決生活中的問題！</b></div>
+<div class="welcome"><h2>🦜 歡迎來到公因數冒險島！</h2><p>生活中常常會遇到「怎麼平均分才不會剩下？」的問題。</p><p>🍕 分披薩　🍎 分水果　🎁 做禮物包　🧩 分隊伍</p><p>今天，就讓<strong>公因數</strong>成為你的數學好幫手！</p></div>
+</div>
+<div class="life"><div class="life-title">⭐ 生活中的公因數 ⭐</div>
+<div class="examples">
+<div class="example"><div class="icon">🍕</div><h3>分披薩</h3><p>有 12 片披薩和 18 杯飲料，要分給幾組同學，每組都一樣多、不能剩下。</p><div class="use">→ 找公因數，找適合的分法</div></div>
+<div class="example"><div class="icon">🍎</div><h3>分水果</h3><p>有 24 顆草莓和 36 顆小番茄，想分成幾盒，而且每盒數量都一樣。</p><div class="use">→ 找公因數，知道哪些分法能整除</div></div>
+<div class="example"><div class="icon">🎁</div><h3>做禮物包</h3><p>有 30 張貼紙和 45 顆糖果，要做成完全一樣的禮物包。</p><div class="use">→ 找公因數，找出可以做幾份</div></div>
+<div class="example"><div class="icon">🧩</div><h3>分隊伍</h3><p>班上有 24 個人和 36 個遊戲道具，要分成幾隊，讓每隊都一樣。</p><div class="use">→ 用最大公因數找最多隊伍</div></div>
+</div>
+<div class="summary"><span>兩個數字都可以整除的數</span><span class="pill">→ 公因數</span><span>其中最大的</span><span class="pill big">→ 最大公因數 👑</span></div>
+<button class="startbtn" onclick="startGame()">▶ 開始冒險！</button></div>
+</div></section>
+
+<section id="game" class="screen"><div class="game"><div class="top"><div class="brand">🏝️ 公因數寶藏島</div><div class="stat">第 <span id="qn">1</span> / 12 題</div><div class="stat">⭐ <span id="score">0</span></div><div class="bar"><div id="fill" class="fill"></div></div></div>
+<div class="gwrap"><div class="head"><div id="stage" class="stage"></div><div id="timer" class="timer">40 秒</div></div><div class="card"><div id="instruction" class="instruction"></div><div id="question" class="question"></div><div id="extra"></div><div id="options" class="options"></div><button id="checkBtn" class="check" onclick="check()">檢查答案 →</button><div id="feedback" class="feedback"></div><button id="next" class="next" onclick="nextQ()">下一題 →</button></div></div></div></section>
+
+<section id="result" class="screen"><div class="start"><div class="result"><h1>🎉 冒險完成！</h1><div id="stars" class="stars"></div><div class="final">⭐ <span id="final">0</span> / 240 分</div><p id="msg"></p><button class="restart" onclick="restart()">🔄 再玩一次</button></div></div></section>
+
+<script>
+const s1=[
+{a:24,b:36,c:[1,2,3,4,6,12]},{a:18,b:30,c:[1,2,3,6]},
+{a:20,b:32,c:[1,2,4]},{a:28,b:42,c:[1,2,7,14]}];
+const s2=[
+{a:24,b:36,c:[1,2,3,4,6,12],o:[1,2,3,4,5,6,8,10,12,15],t:"島上有 24 枚金幣和 36 顆寶石。哪些「分組數」可以讓兩種寶藏都平均分完，而且完全沒有剩下？"},
+{a:30,b:45,c:[1,3,5,15],o:[1,2,3,4,5,6,9,10,15],t:"有 30 枚金幣和 45 顆寶石。哪些「分組數」可以讓金幣和寶石都平均分完？"},
+{a:32,b:48,c:[1,2,4,8,16],o:[1,2,3,4,6,8,12,16,24],t:"探險隊找到 32 枚金幣和 48 顆寶石。哪些「分組數」可以讓兩種寶藏都沒有剩下？"},
+{a:36,b:54,c:[1,2,3,6,9,18],o:[1,2,3,4,5,6,9,12,18],t:"有 36 枚金幣和 54 顆寶石。哪些「分組數」能讓兩種寶藏都平均分完？"}];
+const s3=[
+{a:48,b:60,o:[6,8,12,15],ans:12},{a:36,b:48,o:[6,8,12,18],ans:12},
+{a:42,b:56,o:[7,12,14,21],ans:14},{a:45,b:60,o:[5,10,15,20],ans:15}];
+const stages=[
+["🌱 第一關：因數探險隊",40,"看看兩條因數道路，找出兩邊都有的數字！"],
+["🔍 第二關：寶藏分組",30,"想想看，怎麼分組才能兩種寶藏都剛好分完？"],
+["👑 第三關：最大公因數王冠",30,"找出最多可以分成幾組！"]];
+let qs=[],cur=0,score=0,sel=[],done=false,timerId=null;
+
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function factors(n){let r=[];for(let i=1;i<=n;i++)if(n%i===0)r.push(i);return r}
+function build(){qs=[];[s1,s2,s3].forEach((arr,stage)=>shuffle(arr).forEach(q=>qs.push({...q,stage})))}
+function startGame(){build();cur=0;score=0;document.getElementById("start").classList.remove("active");document.getElementById("result").classList.remove("active");document.getElementById("game").classList.add("active");render()}
+function render(){
+clearInterval(timer);done=false;sel=[];let q=qs[cur],st=stages[q.stage];
+qn.textContent=cur+1;scoreEl();fill.style.width=cur/12*100+"%";stage.textContent=st[0];instruction.textContent=st[2];feedback.className="feedback";feedback.innerHTML="";next.className="next";checkBtn.disabled=false;checkBtn.style.display="block";extra.innerHTML="";options.innerHTML="";
+if(q.stage===0){question.textContent=`哪些數字同時是 ${q.a} 和 ${q.b} 的因數？`;extra.innerHTML=`<div class="roads"><div class="road"><h3>🪙 ${q.a} 的因數</h3><div class="factors">${factors(q.a).map(n=>`<span class="factor">${n}</span>`).join("")}</div></div><div class="road"><h3>💎 ${q.b} 的因數</h3><div class="factors">${factors(q.b).map(n=>`<span class="factor">${n}</span>`).join("")}</div></div></div>`;let bad=[];for(let i=1;i<=Math.max(q.a,q.b);i++)if(!q.c.includes(i))bad.push(i);makeOpts(shuffle([...q.c,...shuffle(bad).slice(0,Math.max(4,6-q.c.length))]),1)}
+else if(q.stage===1){question.textContent=q.t;extra.innerHTML=`<div class="treasure"><span>🪙</span><b>${q.a} 枚金幣</b><span>＋</span><span>💎</span><b>${q.b} 顆寶石</b></div>`;makeOpts(q.o,1)}
+else{question.textContent=`有 ${q.a} 個寶藏和 ${q.b} 個寶藏，最多可以平均分成幾組？`;extra.innerHTML=`<div class="treasure"><span>🏴‍☠️</span><b>最多分幾組，才能每組都一樣多？</b><span>👑</span></div>`;makeOpts(q.o,0)}
+startTimer(st[1])}
+function makeOpts(arr,multi){options.innerHTML="";arr.forEach(n=>{let b=document.createElement("button");b.className="option";b.textContent=n;b.dataset.n=n;b.onclick=()=>pick(n,b,multi);options.appendChild(b)})}
+function pick(n,b,multi){if(done)return;if(multi){if(sel.includes(n)){sel=sel.filter(x=>x!==n);b.classList.remove("selected")}else{sel.push(n);b.classList.add("selected")}}else{sel=[n];document.querySelectorAll(".option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected")}}
+function startTimer(sec){clearInterval(timerId);timeLeft=sec;const el=timerEl();el.textContent=sec+" 秒";el.classList.remove("warn");timerId=setInterval(()=>{timeLeft--;el.textContent=timeLeft+" 秒";if(timeLeft<=10)el.classList.add("warn");if(timeLeft<=0){clearInterval(timerId);timerId=null;check(true)}},1000)}
+function timerEl(){return document.getElementById("timer")}
+function scoreEl(){document.getElementById("score").textContent=score}
+function check(timeout=false){if(done)return;done=true;clearInterval(timerId);timerId=null;checkBtn.disabled=true;checkBtn.style.display="none";let q=qs[cur],correct;if(q.stage===2)correct=sel.length===1&&sel[0]===q.ans;else correct=JSON.stringify([...sel].sort((a,b)=>a-b))===JSON.stringify([...q.c].sort((a,b)=>a-b));if(correct&&!timeout)score+=20;scoreEl();
+document.querySelectorAll(".option").forEach(b=>{let n=+b.dataset.n,ok=q.stage===2?n===q.ans:q.c.includes(n),chosen=sel.includes(n);b.disabled=true;if(ok&&chosen)b.classList.add("correct");else if((!ok&&chosen)||(ok&&!chosen))b.classList.add("wrong")});
+let text=q.stage===2?`${q.a} 和 ${q.b} 的公因數中，最大的數是 ${q.ans}，所以最大公因數是 ${q.ans}。也就是最多可以平均分成 ${q.ans} 組。`:`${q.a} 和 ${q.b} 的因數中，同時出現的數字就是公因數：${q.c.join("、")}。`;
+feedback.className="feedback show "+(correct&&!timeout?"good":"bad");feedback.innerHTML=(timeout?"⏰ 時間到！這題先不加分。":correct?"🎉 答對了！＋20 分":"💡 再想一想！這題沒有得分。")+`<div class="explain">${text}</div>`;next.textContent=cur===11?"查看冒險結果 →":"下一題 →";next.className="next showbtn"}
+function nextQ(){if(!done)return;cur++;if(cur>=12)showResult();else render()}
+function showResult(){clearInterval(timerId);timerId=null;document.getElementById("game").classList.remove("active");document.getElementById("result").classList.add("active");document.getElementById("final").textContent=score;document.getElementById("stars").textContent=score>=220?"★★★★★":score>=180?"★★★★☆":score>=140?"★★★☆☆":score>=80?"★★☆☆☆":"★☆☆☆☆";document.getElementById("msg").textContent=score>=220?"🏆 太厲害了！你已經能用公因數解決分組問題了！":score>=180?"🌟 很棒！你對公因數和最大公因數已經很熟悉了。":score>=140?"👏 做得不錯！再練習幾次，公因數會越來越熟。":"🌱 冒險完成！再玩一次，把「平均分配」和公因數連起來吧！"}
+function restart(){document.getElementById("result").classList.remove("active");document.getElementById("start").classList.add("active")}
+</script>
+</body></html>
